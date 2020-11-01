@@ -6,7 +6,6 @@ g = 9.81 #tyngdeakselerasjon
 dt = 0.0001 #tidsintervall (steglengde?) - ikke noe bra navn... 
 r_bane = 0.5 #bane radius
 v_start = 0.0001 #Start hastighet (hold denne lav, objekter sluppet uten start fart)
-tykkelse = 0.008 #Denne størrelsen 
 
 #Justerbare parametere
 #Alle enheter er SI-enheter
