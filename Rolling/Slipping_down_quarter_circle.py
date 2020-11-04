@@ -1,102 +1,111 @@
+#Generelt om koden
+#-----------------#
+#Koden gjør en tidsdiskretisering, og bruker Eulers metode til å finne farten og vinkelen iterativt.
+#Disse størrelsene blir så brukt til å beregne vinkelhastighet, normalkraften, posisjon, vinkelakselerasjon, og brukes i energibetraktninger.
+
 import numpy as np
 
-#Parametere som går igjen (felles parametere)
-#Alle enheter er SI-enheter
+#Konstante parametere. 
+#Alle størrelser er SI-enheter
 g = 9.81 #tyngdeakselerasjon
-dt = 0.0001 #tidsintervall (steglengde?) - ikke noe bra navn... 
+dt = 0.0001 #Steglengde (holder denne lav for å minimalisere feil i Eulers metode)
 r_bane = 0.5 #bane radius
-v_start = 0.0001 #Start hastighet (hold denne lav, objekter sluppet uten start fart)
+v_start = 0.0001 #Start hastighet (holder denne lav, legemer ble sluppet uten start fart)
 
 #Justerbare parametere
 #Alle enheter er SI-enheter
-r_objekt = 0.0285 #radius på objektet som modelleres (i oppgave 1 settes den til null)
-c = 2/5 #Objektets treghetsmoment konstant (vet ikke formell navn?)
-µ_s = 1 #Statisk friksjonskoeffisient
+r_objekt = 0.025 #radius på objektet som modelleres (i oppgave 1 settes denne til null, siden objektet kan betraktes som en punktpartikkel)
+c = 1/2 #Objektets treghetsmoment konstant (vet ikke formell navn?)
+µ_s = 0.6 #Statisk friksjonskoeffisient
 µ_k = 0.6 #Kinetisk friksjonskoeffisient
-theta_s = 0 #Start vinkel relativ 0
-m = 1 #Objektets masse
+theta_s = 0.073304 #Start vinkel relativ 0 i radianer
+m = 1.411 #Objektets masse i kilogram
 
-#Analytiske uttrykk som går igjen
-#Alle enheter er SI-enheter
-Theta = [] #Vinkel langs banen målt relativt null - en liste
-Theta.append(theta_s) #Legger til startvinkel
+#Liste over lister 
+#-----------------#
+#For hver itterasjon/tidssteg koden kjører, vil den generere nye tallverdier for variablene gitt under. 
+#For å kunne bruke disse senere, er det hensiktsmessig å lagre dem i lister. Verdiene brukes blant annet til visuell representasjon av data.
+#I koden under defineres relevante lister for oppgaven. Det blir også lagt inn initialverdier for de ulike variablene.
 
-V = [] #Fart
+Theta = [] #Vinkel langs banen målt relativt null, i radianer
+Theta.append(theta_s) #Legger til startvinkelen
+
+V = [] #Hastigheten til massesenteret under bevegelsen
 V.append(v_start) #Legger til starthastighet
 
-V_x = [] #Fartskomponent i x-retning
-V_x.append(v_start*np.cos(theta_s)) #Start fart x-retning
+V_x = [] #Massesenterets fartskomponent i x-retning
+V_x.append(v_start*np.cos(theta_s)) # Legger til start fart i x-retning
 
-V_y = [] #Fartkomponent i y-retning
-V_y.append(-v_start*np.sin(theta_s)) #Start fart y-retning
+V_y = [] #Massesenterets fartskomponent i y-retning
+V_y.append(-v_start*np.sin(theta_s)) #Legger til start fart i y-retning
 
-W = [] #Vinkelhastighet om origo
-W.append(v_start/(r_objekt+r_bane)) #start vinkelhastighet
+W = [] #Vinkelhastigheten til objektet om origo
+W.append(v_start/(r_objekt+r_bane)) #Legger til start vinkelhastighet
 
-X = [] #x-posisjon
-X.append((r_objekt + r_bane)*np.sin(theta_s)) # start x-posisjon
+X = [] #x-posisjon målt relativ origo
+X.append((r_objekt + r_bane)*np.sin(theta_s)) #Legger til start x-posisjon
 
-Y = [] #y-posisjon
-Y.append((r_objekt + r_bane)*np.cos(theta_s)) # start y-posisjon
+Y = [] #y-posisjon målt relativ origo
+Y.append((r_objekt + r_bane)*np.cos(theta_s)) #Legger til start y-posisjon
 
 N = [] #Normalkraft
-N.append(m*g*np.cos(theta_s)) #Normalkraft ved start
+N.append(m*g*np.cos(theta_s)) #Legger til normalkraften ved start
 
-A_tan_1 = [] #Tangentsiell akselerasjon
-A_tan_1.append(g*np.sin(theta_s))
+A_tan_1 = [] #Massesenterets tangentsielle akselerasjon oppgave 1
+A_tan_1.append(g*np.sin(theta_s)) #Legger til tangentsiell akselerasjon ved start for oppgave 1
 
-A_tan_2 = [] #Tangentsiell akselerasjon oppgave 2
-A_tan_2.append((g*np.sin(theta_s))/(c+1)) #start tangentsiell akselerasjon oppgave 1
+A_tan_2 = [] #Massesenterets tangentsielle akselerasjon oppgave 2
+A_tan_2.append((g*np.sin(theta_s))/(c+1)) #Legger til tangentsiell akselerasjon ved start oppgave 2
 
 Tid = [] #tid
 Tid.append(dt)
 
 F_max = [] # Maksimal friksjonskraft
-F_max.append(µ_s*m*g*np.cos(theta_s)) #start maksimal friksjonskraft
+F_max.append(µ_s*m*g*np.cos(theta_s)) #Legger til Maksimal friksjonskraft ved start
 
 Alfa = [] #Vinkelakselerasjon
-Alfa.append((g*np.sin(theta_s))/(r_objekt+r_bane))
+Alfa.append((g*np.sin(theta_s))/(r_objekt+r_bane)) #Legger til vinkelakselerasjon ved start
 
 F_rull = [] #Friksjonskraften under ren rulling
-F_rull.append((c*m*g*np.sin(theta_s))/(c+1))
+F_rull.append((c*m*g*np.sin(theta_s))/(c+1)) #Legger til friksjonskraft ved start
 
-F_slur = [] #Friksjonskraft under sluring
+F_slur = [] #Friksjonskraft under sluring - ingen startverdi
 
-A_tan_slur = [] #Tangtsiell akselerasjon under sluring
+A_tan_slur = [] #Tangtsiell akselerasjon under sluring - ingen startverdi
 
-N_slur = [] #Normalkraft under sluring
+N_slur = [] #Normalkraft under sluring - ingen startverdi
 
 Potensiell = [] #Potensiell energi
-Potensiell.append(m*g*((r_objekt + r_bane)*np.cos(theta_s)))
+Potensiell.append(m*g*((r_objekt + r_bane)*np.cos(theta_s))) #Legger til potensiell energi ved start
 
 K_trans = [] #Kinetisk energi grunnet translasjon
-K_trans.append(m*0.5*v_start**2)
+K_trans.append(m*0.5*v_start**2) #Legger til kinetisk energi grunnet translasjon ved start
 
 K_rot = [] #Kinetisk energi grunnet rotasjon
-K_rot.append(0.5*c*m*(v_start)**2)
+K_rot.append(0.5*c*m*(v_start)**2) #Legger til kinetisk energi grunnet rotasjon ved start
 
-Mekanisk_E = [] #Total mekanisk energi i systemet
-Mekanisk_E.append(Potensiell[0] + K_trans[0] + K_rot[0])
+Mekanisk_E = [] #Meknaisk energi 
+Mekanisk_E.append(Potensiell[0] + K_trans[0] + K_rot[0]) #Legger til mekanisk energi ved start
 
 F_work = [] #Arbeid utført av friksjonskraften
-F_work.append(0)
+F_work.append(0) #I starten er ingen friksjonsarbeid utført - legger til 0 i listen
 
 Total_E = [] #Total energi i systemet - dette er en konstant
-Total_E.append(Mekanisk_E[0] + F_work[0])
+Total_E.append(Mekanisk_E[0] + F_work[0]) #Legget til totalt energi ved start
 
 V_rel = [] #Farten massesenter har relativ underlag under sluring
-#Hensiktsmessig å definere denne størrelsen, siden den viser seg å være nyttig for å regne friksjonsarbeid
+#Hensiktsmessig å definere denne størrelsen, siden den viser seg å være nyttig i beregninger avfriksjonsarbeidet. 
 
 
-
-
-
-
-
-
+#---------------------------------#
 
 
 #Oppgave 1 (Inkludert energibetraktning)
+
+if len(Theta) > 1:
+    del Theta[1:], V[1:], V_x[1:], V_y[1:], W[1:], N[1:], X[1:], Y[1:], Tid[1:], A_tan_1[1::]
+
+#Koden over kjøres for å fjerne alle verdiene i listene, utenom initialverdien. 
 
 i = 0 #Indeks for loop
 while N[i] > 0:
@@ -128,16 +137,14 @@ while N[i] > 0:
     Tid.append(tid)
     i += 1
 
-
-
-
+#---------------------#
 
 #Oppgave 2 (inkludert energibetraktning)
 
 if len(Theta) > 1:
     del Theta[1:], V[1:], V_x[1:], V_y[1:], W[1:], N[1:], X[1:], Y[1:], Tid[1:], A_tan_1[1::]
 
-#Koden over kjøres for å fjerne eksisterende verdier i listene. 
+#Koden over kjøres for å fjerne alle verdiene i listene, utenom initialverdien. 
 
 i = 0 #Indeks for loop
 while N[i] > 0:
@@ -179,16 +186,14 @@ while N[i] > 0:
     Tid.append(tid)
     i += 1
 
-
-
-
+#----------------#
 
 #oppgave 3 (inkludert energibetraktninger)
 
 if len(Theta) > 1:
     del Theta[1:], V[1:], V_x[1:], V_y[1:], W[1:], N[1:], X[1:], Y[1:], Tid[1:], A_tan_1[1::]
 
-#Koden over kjøres for å fjerne eksisterende verdier i listene. 
+#Koden over kjøres for å fjerne alle verdiene i listene, utenom initialverdien. 
 
 i = 0 #Indeks for loop
 while N[-1] > 0:
@@ -253,13 +258,13 @@ while N[-1] > 0:
             F_work.append(f_work)
             k_trans = 0.5*m*(V[-1])**2 #Kinetisk energi translasjon
             K_trans.append(k_trans)
-            k_rot = 0.5*c*m*(V[-1])**2
+            k_rot = 0.5*c*m*(V[-1])**2 #Kinetisk energi rotasjon
             K_rot.append(k_rot)
-            potensiell = m*g*Y[-1]
+            potensiell = m*g*Y[-1] #Potensiell energi 
             Potensiell.append(potensiell)
-            mekanisk_e = K_trans[-1] + K_rot[-1] + Potensiell[-1]
+            mekanisk_e = K_trans[-1] + K_rot[-1] + Potensiell[-1] # Mekanisk energi
             Mekanisk_E.append(mekanisk_e)
-            total_e = Mekanisk_E[-1] + F_work[-1]
+            total_e = Mekanisk_E[-1] + F_work[-1] #Total energi
             Total_E.append(total_e)
             tid = dt*i
             Tid.append(tid)
@@ -269,4 +274,3 @@ while N[-1] > 0:
         tid = dt*i
         Tid.append(tid)
         i += 1
-
