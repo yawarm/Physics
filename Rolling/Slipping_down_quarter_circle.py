@@ -191,7 +191,7 @@ while N[i] > 0:
 #oppgave 3 (inkludert energibetraktninger)
 
 if len(Theta) > 1:
-    del Theta[1:], V[1:], V_x[1:], V_y[1:], W[1:], N[1:], X[1:], Y[1:], Tid[1:], A_tan_1[1::]
+    del Theta[1:], V[1:], V_x[1:], V_y[1:], W[1:], N[1:], X[1:], Y[1:], Tid[1:], A_tan_1[1::], F_work[1::]
 
 #Koden over kjøres for å fjerne alle verdiene i listene, utenom initialverdien. 
 
@@ -274,3 +274,26 @@ while N[-1] > 0:
         tid = dt*i
         Tid.append(tid)
         i += 1
+
+
+
+#FIGUR 1
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+#friksjonarbeid som funksjon av vinkel
+
+Theta.pop()
+vinkel = np.array(Theta)
+friksjon = np.array(F_work)
+
+plt.figure(1)  # Initialize a new figure - k er figurnummer
+plt.plot(vinkel*(180/np.pi), friksjon), '--r'  #  Plot x-vals and y-vals (listene med x og y verdier)
+# - - gir stipla linjer,     r gir rød graf
+plt.xlabel('vinkel', fontsize=10)  # Add name to x-axis, change fontsize
+plt.ylabel('friksjon', fontsize=10)  # Add name to y-axis, change fontsize
+plt.title('En kvadratisk funksjon')  # Add title to the figure
+plt.xticks(fontsize=14)  # Change fontsize of x-ticks
+plt.yticks(fontsize=14)  # Change fontsize of y-ticks
+#plt.show()  # Show the figure
