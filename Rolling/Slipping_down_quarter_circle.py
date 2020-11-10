@@ -103,7 +103,8 @@ V_rel = [] #Farten massesenter har relativ underlag under sluring
 #Oppgave 1 (Inkludert energibetraktning)
 
 if len(Theta) > 1:
-    del Theta[1:], V[1:], V_x[1:], V_y[1:], W[1:], N[1:], X[1:], Y[1:], Tid[1:], A_tan_1[1::]
+    del Theta[1:], V[1:], V_x[1:], V_y[1:], W[1:], N[1:], X[1:], Y[1:], Tid[1:], A_tan_1[1:], N_slur[1:], A_tan_2[1:], A_tan_slur[1:]
+    del Mekanisk_E[1:], Potensiell[1:], Total_E[1:], K_trans[1:], F_work[1:], K_rot[1:], V_rel[1:], Alfa[1:], F_slur[1:]
 
 #Koden over kjøres for å fjerne alle verdiene i listene, utenom initialverdien. 
 
@@ -137,12 +138,16 @@ while N[i] > 0:
     Tid.append(tid)
     i += 1
 
+print(Mekanisk_E)
+
+""" 
 #---------------------#
 
 #Oppgave 2 (inkludert energibetraktning)
 
 if len(Theta) > 1:
-    del Theta[1:], V[1:], V_x[1:], V_y[1:], W[1:], N[1:], X[1:], Y[1:], Tid[1:], A_tan_1[1::]
+    del Theta[1:], V[1:], V_x[1:], V_y[1:], W[1:], N[1:], X[1:], Y[1:], Tid[1:], A_tan_1[1:], N_slur[1:], A_tan_2[1:], A_tan_slur[1:]
+    del Mekanisk_E[1:], Potensiell[1:], Total_E[1:], K_trans[1:], F_work[1:], K_rot[1:], V_rel[1:], Alfa[1:], F_slur[1:]
 
 #Koden over kjøres for å fjerne alle verdiene i listene, utenom initialverdien. 
 
@@ -191,7 +196,8 @@ while N[i] > 0:
 #oppgave 3 (inkludert energibetraktninger)
 
 if len(Theta) > 1:
-    del Theta[1:], V[1:], V_x[1:], V_y[1:], W[1:], N[1:], X[1:], Y[1:], Tid[1:], A_tan_1[1::], F_work[1::]
+    del Theta[1:], V[1:], V_x[1:], V_y[1:], W[1:], N[1:], X[1:], Y[1:], Tid[1:], A_tan_1[1:], N_slur[1:], A_tan_2[1:], A_tan_slur[1:]
+    del Mekanisk_E[1:], Potensiell[1:], Total_E[1:], K_trans[1:], F_work[1:], K_rot[1:], V_rel[1:], Alfa[1:], F_slur[1:]
 
 #Koden over kjøres for å fjerne alle verdiene i listene, utenom initialverdien. 
 
@@ -296,4 +302,4 @@ plt.ylabel('friksjon', fontsize=10)  # Add name to y-axis, change fontsize
 plt.title('En kvadratisk funksjon')  # Add title to the figure
 plt.xticks(fontsize=14)  # Change fontsize of x-ticks
 plt.yticks(fontsize=14)  # Change fontsize of y-ticks
-#plt.show()  # Show the figure
+#plt.show()  # Show the figure """
