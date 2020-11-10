@@ -112,33 +112,31 @@ i = 0 #Indeks for loop
 while N[i] > 0:
     v = V[i] + Tid[0]*A_tan_1[i] #ny fart
     V.append(v)
-    w = V[i+1]/r_bane #ny vinkelhastighet
+    w = V[-1]/r_bane #ny vinkelhastighet
     W.append(w)
-    theta = Theta[i] + W[i+1]*Tid[0] #ny vinkel
+    theta = Theta[i] + W[-1]*Tid[0] #ny vinkel
     Theta.append(theta)
-    n = m*g*(3*np.cos(Theta[i+1]) - 2*np.cos(theta_s)) #ny normalkraft
+    n = m*g*(3*np.cos(Theta[-1]) - 2*np.cos(theta_s)) #ny normalkraft
     N.append(n)
-    a_tan = g*np.sin(Theta[i+1]) #ny tangetsiell akselerasjon
+    a_tan = g*np.sin(Theta[-1]) #ny tangetsiell akselerasjon
     A_tan_1.append(a_tan)
-    v_x = V[i]*np.cos(Theta[i+1]) #ny fart x-komponent
+    v_x = V[i]*np.cos(Theta[-1]) #ny fart x-komponent
     V_x.append(v_x)
-    v_y = -V[i]*np.sin(Theta[i+1])#ny fart y-komponent
+    v_y = -V[i]*np.sin(Theta[-1])#ny fart y-komponent
     V_y.append(v_y)
-    x = (r_objekt + r_bane)*(np.sin(Theta[i+1])) #ny x-posisjon
+    x = (r_objekt + r_bane)*(np.sin(Theta[-1])) #ny x-posisjon
     X.append(x)
-    y = (r_objekt + r_bane)*(np.cos(Theta[i+1])) #ny-posisjon
+    y = (r_objekt + r_bane)*(np.cos(Theta[-1])) #ny-posisjon
     Y.append(y)
-    potensiell = m*g*Y[i+1] #ny potensiell energi 
+    potensiell = m*g*Y[-1] #ny potensiell energi 
     Potensiell.append(potensiell)
-    k_trans = 0.5*m*(V[i+1])**2 #ny kinetisk energi translasjon
+    k_trans = 0.5*m*(V[-1])**2 #ny kinetisk energi translasjon
     K_trans.append(k_trans)
     mekanisk_e = potensiell + k_trans #ny mekanisk energi
     Mekanisk_E.append(mekanisk_e)
     tid = dt*i
     Tid.append(tid)
     i += 1
-
-print(Mekanisk_E)
 
 """ 
 #---------------------#
@@ -155,33 +153,33 @@ i = 0 #Indeks for loop
 while N[i] > 0:
     v = V[i] + Tid[0]*A_tan_2[i] #ny fart
     V.append(v)
-    w = V[i+1]/(r_bane+r_objekt) #ny vinkelhastighet
+    w = V[-1]/(r_bane+r_objekt) #ny vinkelhastighet
     W.append(w)
-    theta = Theta[i] + W[i+1]*Tid[0] #ny vinkel
+    theta = Theta[i] + W[-1]*Tid[0] #ny vinkel
     Theta.append(theta)
-    n = m*g*np.cos(Theta[i+1]) + (-2*m*g*(np.cos(theta_s) - np.cos(Theta[i+1])))/(1+c) #ny normalkraft
+    n = m*g*np.cos(Theta[-1]) + (-2*m*g*(np.cos(theta_s) - np.cos(Theta[-1])))/(1+c) #ny normalkraft
     N.append(n)
-    f_max = µ_s*N[i+1] #ny max friksjonskraft
+    f_max = µ_s*N[-1] #ny max friksjonskraft
     F_max.append(f_max)
-    a_tan = (g*np.sin(Theta[i+1]))/(c+1)#ny tangetsiell akselerasjon
+    a_tan = (g*np.sin(Theta[-1]))/(c+1)#ny tangetsiell akselerasjon
     A_tan_2.append(a_tan)
-    alfa = A_tan_2[i+1]/(r_bane+r_objekt) #Ny vinkelakselerasjon
+    alfa = A_tan_2[-1]/(r_bane+r_objekt) #Ny vinkelakselerasjon
     Alfa.append(alfa)
-    v_x = V[i]*np.cos(Theta[i+1]) #ny fart x-komponent
+    v_x = V[i]*np.cos(Theta[-1]) #ny fart x-komponent
     V_x.append(v_x)
-    v_y = -V[i]*np.sin(Theta[i+1])#ny fart y-komponent
+    v_y = -V[i]*np.sin(Theta[-1])#ny fart y-komponent
     V_y.append(v_y)
-    x = (r_objekt + r_bane)*(np.sin(Theta[i+1])) #ny x-posisjon
+    x = (r_objekt + r_bane)*(np.sin(Theta[-1])) #ny x-posisjon
     X.append(x)
-    y = (r_objekt + r_bane)*(np.cos(Theta[i+1])) #ny-posisjon
+    y = (r_objekt + r_bane)*(np.cos(Theta[-1])) #ny-posisjon
     Y.append(y)
-    f_rull = (m*g*c*np.sin(Theta[i+1]))/(c + 1)
+    f_rull = (m*g*c*np.sin(Theta[-1]))/(c + 1)
     F_rull.append(f_rull)
-    potensiell = m*g*Y[i+1] #ny potensiell energi 
+    potensiell = m*g*Y[-1] #ny potensiell energi 
     Potensiell.append(potensiell)
-    k_trans = 0.5*m*(V[i+1])**2 #ny kinetisk energi translasjon
+    k_trans = 0.5*m*(V[-1])**2 #ny kinetisk energi translasjon
     K_trans.append(k_trans)
-    k_rot = 0.5*c*m*(V[i+1])**2 #ny kinetisk energi rotasjon
+    k_rot = 0.5*c*m*(V[-1])**2 #ny kinetisk energi rotasjon
     K_rot.append(k_rot)
     mekanisk_e = potensiell + k_trans + k_rot #ny mekanisk energi
     Mekanisk_E.append(mekanisk_e)
@@ -205,33 +203,33 @@ i = 0 #Indeks for loop
 while N[-1] > 0:
     v = V[i] + Tid[0]*A_tan_2[i] #ny fart
     V.append(v)
-    w = V[i+1]/(r_bane+r_objekt) #ny vinkelhastighet
+    w = V[-1]/(r_bane+r_objekt) #ny vinkelhastighet
     W.append(w)
     theta = Theta[i] + W[i+1]*Tid[0] #ny vinkel
     Theta.append(theta)
-    n = m*g*np.cos(Theta[i+1]) + (-2*m*g*(np.cos(theta_s) - np.cos(Theta[i+1])))/(1+c) #ny normalkraft
+    n = m*g*np.cos(Theta[-1]) + (-2*m*g*(np.cos(theta_s) - np.cos(Theta[-1])))/(1+c) #ny normalkraft
     N.append(n)
-    f_max = µ_s*N[i+1] #ny max friksjonskraft
+    f_max = µ_s*N[-1] #ny max friksjonskraft
     F_max.append(f_max)
-    a_tan = (g*np.sin(Theta[i+1]))/(c+1)#ny tangetsiell akselerasjon
+    a_tan = (g*np.sin(Theta[-1]))/(c+1)#ny tangetsiell akselerasjon
     A_tan_2.append(a_tan)
-    alfa = A_tan_2[i+1]/(r_bane+r_objekt) #Ny vinkelakselerasjon
+    alfa = A_tan_2[-1]/(r_bane+r_objekt) #Ny vinkelakselerasjon
     Alfa.append(alfa)
-    v_x = V[i+1]*np.cos(Theta[i+1]) #ny fart x-komponent
+    v_x = V[-1]*np.cos(Theta[-1]) #ny fart x-komponent
     V_x.append(v_x)
-    v_y = -V[i+1]*np.sin(Theta[i+1])#ny fart y-komponent
+    v_y = -V[-1]*np.sin(Theta[-1])#ny fart y-komponent
     V_y.append(v_y)
-    x = (r_objekt + r_bane)*(np.sin(Theta[i+1])) #ny x-posisjon
+    x = (r_objekt + r_bane)*(np.sin(Theta[-1])) #ny x-posisjon
     X.append(x)
-    y = (r_objekt + r_bane)*(np.cos(Theta[i+1])) #ny-posisjon
+    y = (r_objekt + r_bane)*(np.cos(Theta[-1])) #ny-posisjon
     Y.append(y)
-    f_rull = (m*g*c*np.sin(Theta[i+1]))/(c + 1)
+    f_rull = (m*g*c*np.sin(Theta[-1]))/(c + 1)
     F_rull.append(f_rull)
-    potensiell = m*g*Y[i+1] #ny potensiell energi 
+    potensiell = m*g*Y[-1] #ny potensiell energi 
     Potensiell.append(potensiell)
-    k_trans = 0.5*m*(V[i+1])**2 #ny kinetisk energi translasjon
+    k_trans = 0.5*m*(V[-1])**2 #ny kinetisk energi translasjon
     K_trans.append(k_trans)
-    k_rot = 0.5*c*m*(V[i+1])**2 #ny kinetisk energi rotasjon
+    k_rot = 0.5*c*m*(V[-1])**2 #ny kinetisk energi rotasjon
     K_rot.append(k_rot)
     mekanisk_e = potensiell + k_trans + k_rot #ny mekanisk energi
     Mekanisk_E.append(mekanisk_e)
@@ -281,25 +279,3 @@ while N[-1] > 0:
         Tid.append(tid)
         i += 1
 
-
-
-#FIGUR 1
-
-import matplotlib.pyplot as plt
-import numpy as np
-
-#friksjonarbeid som funksjon av vinkel
-
-Theta.pop()
-vinkel = np.array(Theta)
-friksjon = np.array(F_work)
-
-plt.figure(1)  # Initialize a new figure - k er figurnummer
-plt.plot(vinkel*(180/np.pi), friksjon), '--r'  #  Plot x-vals and y-vals (listene med x og y verdier)
-# - - gir stipla linjer,     r gir rød graf
-plt.xlabel('vinkel', fontsize=10)  # Add name to x-axis, change fontsize
-plt.ylabel('friksjon', fontsize=10)  # Add name to y-axis, change fontsize
-plt.title('En kvadratisk funksjon')  # Add title to the figure
-plt.xticks(fontsize=14)  # Change fontsize of x-ticks
-plt.yticks(fontsize=14)  # Change fontsize of y-ticks
-#plt.show()  # Show the figure """
