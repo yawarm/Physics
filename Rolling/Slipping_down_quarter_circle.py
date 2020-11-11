@@ -90,9 +90,6 @@ Mekanisk_E.append(Potensiell[0] + K_trans[0] + K_rot[0]) #Legger til mekanisk en
 F_work = [] #Arbeid utført av friksjonskraften
 F_work.append(0) #I starten er ingen friksjonsarbeid utført - legger til 0 i listen
 
-Total_E = [] #Total energi i systemet - dette er en konstant
-Total_E.append(Mekanisk_E[0] + F_work[0]) #Legget til totalt energi ved start
-
 V_rel = [] #Farten massesenter har relativ underlag under sluring
 #Hensiktsmessig å definere denne størrelsen, siden den viser seg å være nyttig i beregninger avfriksjonsarbeidet. 
 
@@ -104,7 +101,7 @@ V_rel = [] #Farten massesenter har relativ underlag under sluring
 
 if len(Theta) > 1:
     del Theta[1:], V[1:], V_x[1:], V_y[1:], W[1:], N[1:], X[1:], Y[1:], Tid[1:], A_tan_1[1:], N_slur[1:], A_tan_2[1:], A_tan_slur[1:]
-    del Mekanisk_E[1:], Potensiell[1:], Total_E[1:], K_trans[1:], F_work[1:], K_rot[1:], V_rel[1:], Alfa[1:], F_slur[1:]
+    del Mekanisk_E[1:], Potensiell[1:], K_trans[1:], F_work[1:], K_rot[1:], V_rel[1:], Alfa[1:], F_slur[1:]
 
 #Koden over kjøres for å fjerne alle verdiene i listene, utenom initialverdien. 
 
@@ -138,14 +135,14 @@ while N[i] > 0:
     Tid.append(tid)
     i += 1
 
-""" 
+""" """ 
 #---------------------#
 
 #Oppgave 2 (inkludert energibetraktning)
 
 if len(Theta) > 1:
     del Theta[1:], V[1:], V_x[1:], V_y[1:], W[1:], N[1:], X[1:], Y[1:], Tid[1:], A_tan_1[1:], N_slur[1:], A_tan_2[1:], A_tan_slur[1:]
-    del Mekanisk_E[1:], Potensiell[1:], Total_E[1:], K_trans[1:], F_work[1:], K_rot[1:], V_rel[1:], Alfa[1:], F_slur[1:]
+    del Mekanisk_E[1:], Potensiell[1:], K_trans[1:], F_work[1:], K_rot[1:], V_rel[1:], Alfa[1:], F_slur[1:]
 
 #Koden over kjøres for å fjerne alle verdiene i listene, utenom initialverdien. 
 
@@ -183,8 +180,6 @@ while N[i] > 0:
     K_rot.append(k_rot)
     mekanisk_e = potensiell + k_trans + k_rot #ny mekanisk energi
     Mekanisk_E.append(mekanisk_e)
-    total_e = mekanisk_e
-    Total_E.append(mekanisk_e)
     tid = dt*i #Ny tid
     Tid.append(tid)
     i += 1
@@ -195,7 +190,7 @@ while N[i] > 0:
 
 if len(Theta) > 1:
     del Theta[1:], V[1:], V_x[1:], V_y[1:], W[1:], N[1:], X[1:], Y[1:], Tid[1:], A_tan_1[1:], N_slur[1:], A_tan_2[1:], A_tan_slur[1:]
-    del Mekanisk_E[1:], Potensiell[1:], Total_E[1:], K_trans[1:], F_work[1:], K_rot[1:], V_rel[1:], Alfa[1:], F_slur[1:]
+    del Mekanisk_E[1:], Potensiell[1:], K_trans[1:], F_work[1:], K_rot[1:], V_rel[1:], Alfa[1:], F_slur[1:]
 
 #Koden over kjøres for å fjerne alle verdiene i listene, utenom initialverdien. 
 
@@ -233,8 +228,6 @@ while N[-1] > 0:
     K_rot.append(k_rot)
     mekanisk_e = potensiell + k_trans + k_rot #ny mekanisk energi
     Mekanisk_E.append(mekanisk_e)
-    total_e = mekanisk_e
-    Total_E.append(mekanisk_e)
     if f_rull > f_max: #Betingelse for overgang fra ren rulling til sluring
         theta_kritisk = Theta[i]
         k = i #lagrer indexen vi går over fra ren rulling til sluring
@@ -258,7 +251,7 @@ while N[-1] > 0:
             X.append(x)
             y = (r_objekt + r_bane)*(np.cos(Theta[i+1])) #ny-posisjon
             Y.append(y)
-            f_work = F_slur[-1]*V_rel[-1]*dt #arbeid gjort av friksjonskraft
+            f_work = F_slur[-1]*V_rel[-1]*dt + F_work[-1] #arbeid gjort av friksjonskraft
             F_work.append(f_work)
             k_trans = 0.5*m*(V[-1])**2 #Kinetisk energi translasjon
             K_trans.append(k_trans)
@@ -268,8 +261,6 @@ while N[-1] > 0:
             Potensiell.append(potensiell)
             mekanisk_e = K_trans[-1] + K_rot[-1] + Potensiell[-1] # Mekanisk energi
             Mekanisk_E.append(mekanisk_e)
-            total_e = Mekanisk_E[-1] + F_work[-1] #Total energi
-            Total_E.append(total_e)
             tid = dt*i
             Tid.append(tid)
             j += 1
@@ -279,3 +270,50 @@ while N[-1] > 0:
         Tid.append(tid)
         i += 1
 
+
+#FIGUR 1 - oppgave 1
+
+import matplotlib.pyplot as plt
+
+plt.figure(1)  # Initialize a new figure - k er figurnummer
+plt.plot(Theta, Mekanisk_E), '--r'  #  Plot x-vals and y-vals (listene med x og y verdier)
+# - - gir stipla linjer,     r gir rød graf
+plt.xlabel('vinkel rad', fontsize=10)  # Add name to x-axis, change fontsize
+plt.ylabel('Mekanisk energi', fontsize=10)  # Add name to y-axis, change fontsize
+plt.title('Mekanisk energi som funksjon av vinkel i radianer')  # Add title to the figure
+plt.xticks(fontsize=14)  # Change fontsize of x-ticks
+plt.yticks(fontsize=14)  # Change fontsize of y-ticks
+plt.grid()
+plt.show()  # Show the figure """
+
+
+#FIGUR 2 - oppgave 1
+
+import matplotlib.pyplot as plt
+
+plt.figure(1)  # Initialize a new figure - k er figurnummer
+plt.plot(Theta, V), '--r'  #  Plot x-vals and y-vals (listene med x og y verdier)
+# - - gir stipla linjer,     r gir rød graf
+plt.xlabel('vinkel rad', fontsize=10)  # Add name to x-axis, change fontsize
+plt.ylabel('fart ms^-1', fontsize=10)  # Add name to y-axis, change fontsize
+plt.title('Fart som funksjon av vinkel i radianer')  # Add title to the figure
+plt.xticks(fontsize=14)  # Change fontsize of x-ticks
+plt.yticks(fontsize=14)  # Change fontsize of y-ticks
+plt.grid()
+#plt.show()  # Show the figure """
+
+
+#FIGUR 3 - Oppgave 3
+
+import matplotlib.pyplot as plt
+
+plt.figure(1)  # Initialize a new figure - k er figurnummer
+plt.plot(Theta, Mekanisk_E), '--r'  #  Plot x-vals and y-vals (listene med x og y verdier)
+# - - gir stipla linjer,     r gir rød graf
+plt.xlabel('vinkel rad', fontsize=10)  # Add name to x-axis, change fontsize
+plt.ylabel('Mekanisk energi', fontsize=10)  # Add name to y-axis, change fontsize
+plt.title('Mekanisk energi som funksjon av vinkel i radianer')  # Add title to the figure
+plt.xticks(fontsize=14)  # Change fontsize of x-ticks
+plt.yticks(fontsize=14)  # Change fontsize of y-ticks
+plt.grid()
+plt.show()  # Show the figure """
