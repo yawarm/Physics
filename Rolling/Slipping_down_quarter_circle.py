@@ -135,7 +135,7 @@ while N[i] > 0:
     Tid.append(tid)
     i += 1
 
-""" """ 
+
 #---------------------#
 
 #Oppgave 2 (inkludert energibetraktning)
@@ -237,7 +237,7 @@ while N[-1] > 0:
             F_slur.append(f_slur)
             w_rull = W[i+1] + (F_slur[-1]*dt)/(c*m)
             W.append(w_rull)
-            a_tan_slur = (g*np.sin(Theta[-1])) - F_slur[j] #tangentsiell akselerasjon sluring
+            a_tan_slur = (g*np.sin(Theta[-1])) - (F_slur[j])/m #tangentsiell akselerasjon sluring
             A_tan_slur.append(a_tan_slur)
             v = V[i] + dt*A_tan_slur[j] #ny fart
             V.append(v)
